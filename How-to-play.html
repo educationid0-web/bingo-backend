@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Science+Gothic:wght@100..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Science+Gothic:wght@100..900&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Play Bingo</title>
+
+<style>
+body {
+    user-select: none;
+    margin: 0;
+    padding: 0;
+    background: #000;
+    color: #fff;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    font-size: 48px;
+    color: #12b644;
+    margin-bottom: 40px;
+}
+
+/* Step box with boundary */
+.step-box {
+    background: #111;
+    border: 3px solid #0f0;   /* green boundary */
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 0 8px #0f0;  /* glow effect */
+    transition: transform 0.2s;
+}
+
+
+
+
+
+
+
+.images-row {
+    display: flex;           /* horizontal by default */
+    justify-content: space-evenly; /* space between images */
+    gap: 7px;               /* space between images */
+    flex-wrap: nowrap;       /* keep in one row on PC */
+}
+
+.images-row img {
+    flex: 1;                 /* each image takes equal width */
+    max-width: 32%;          /* three images fit nicely with gaps */
+    border-radius: 10px;
+    border: solid white;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+    .images-row {
+        flex-direction: column;  /* stack vertically */
+        gap: 15px;
+        
+    }
+
+    .images-row img {
+        max-width: 100%;       /* full width on mobile */
+    }
+}
+
+
+.back-btn {
+    display: block;
+    width: 200px;
+    margin: 30px auto;
+    padding: 12px;
+    background: white;
+    color: black;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.back-btn:hover {
+    transform: scale(1.05);
+    background: black;
+    color: white;
+    border: 2px solid white;
+}
+#head{
+    font-size: 20px;;
+    color:aqua;
+  font-family: "Science Gothic", sans-serif;
+  font-optical-sizing: auto;
+  text-align : center;
+}
+#text{
+    font-size : 22px;
+    font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-optical-sizing: auto;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <h1>How to Play Bingo</h1>
+    
+    <div class="step-box">
+        <h2 id="head"> # ABOUT THE GAME # </h2>
+        <p id="text">
+            Bingo is a thrilling game of luck and quick thinking played
+            with numbered grids. You might have played this in your childhood , the game is 
+            simple ,  Players take turns calling out random 
+            numbers, while others search their cards to mark them. The mission is
+            simple — be the first to complete total 5 row, column, or diagonal and 
+            shout BINGO!
+        </p>   
+    </div>
+
+    <!-- Step 1 -->
+    <div class="step-box">
+    <h2 id="head">🎯 Your Board 🎯</h2>
+    <p id="text">Each player gets a Bingo board with 25 numbers randomly placed in
+        a 5 X 5 grid and each gets turn to call a number.    
+    </p>
+    <div class="images-row">
+        <img src="newboard1.jpg" alt="Board Example 1">
+        <img src="newboard2.jpg" alt="Board Example 2">
+    </div>
+</div>
+
+
+    
+
+    <!-- Step 3 -->
+    <div class="step-box">
+        <h2 id="head">🟡 Completing a Line 🟡</h2>
+        <p id="text">
+            Your aim is to form rows , columns and diagonals by calling
+            the numbers , Forming them would lit up the title.
+        </p>
+        <div class="images-row">
+            <img src="linenew1.jpg" alt="Line 1">
+            <img src="linenew2.jpg" alt="Line 2">
+            <img src="linenew3.jpg" alt="Line 3">
+        </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step-box">
+        <h2 id="head">😎 Making Combos 😎</h2>
+        <p id="text">Strategize and form combos in order to maximize your chances 
+            of winning.</p>
+        <div class="images-row">
+            <img src="combo1.jpg" alt="Pick 1">
+            <img src="combo2.jpg" alt="Pick 2">
+            
+        </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="step-box">
+        <h2 id="head">🏆 Win the Game 🏆</h2>
+        <p id="text">Once 5 lines are completed, look out for the 
+            BINGO title to change from <span style="color:yellow;">Yellow</span>
+            to <span style="color:rgb(59, 255, 59)">Green</span>. Press the title 
+            to claim victory.
+        </p>
+        <div class="images-row">
+            <img src="win1.png" alt="Win 1">
+            <img src="win2.png" alt="Win 2">
+            <img src="win3.png" alt="Win 3">
+        </div>
+    </div>
+
+    <button class="back-btn" onclick="window.location.href='main-menu.html'">⬅ Back to Menu</button>
+</div>
+
+</body>
+</html>
