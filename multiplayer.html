@@ -8,7 +8,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bingo Game</title>
-<!-- Google Font -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=BBH+Sans+Hegarty&display=swap" rel="stylesheet">
@@ -20,10 +19,10 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) scale(0);
-  width: 90vw;              /* almost full width of screen */
-  max-width: 350px;         /* smaller width for phones */
-  max-height: 90vh;          /* prevent vertical overflow */
-  overflow-y: auto;         /* scroll inside if content is too tall */
+  width: 90vw;              
+  max-width: 350px;    
+  max-height: 90vh;    
+  overflow-y: auto;     
   padding: 20px;
   background-color: #1f1f1f;
   border-radius: 15px;
@@ -31,7 +30,7 @@
   text-align: center;
   transition: transform 0.25s ease;
   z-index: 1000;
-  box-sizing: border-box;   /* include padding in width/height */
+  box-sizing: border-box;  
 }
   .modal-overlay { position: fixed; inset: 0; background: transparent; display:flex; justify-content:center; align-items:center; z-index:9999; transform: scale(0); transition:0.25s ease; }
   .modal-overlay.show{ transform: scale(1); }
@@ -54,7 +53,7 @@
 }
 
   body {
-    position: relative; /* add this */
+    position: relative; 
     user-select: none;
     overflow: hidden;
     background-color: #121212;
@@ -72,8 +71,8 @@
 
 
   .title {
-      -webkit-tap-highlight-color: transparent; /* remove blue highlight on mobile */
-  user-select: none; /* already present, keep it */
+      -webkit-tap-highlight-color: transparent; 
+  user-select: none;
   cursor: pointer;
     user-select: none;
     font-size: 3rem;
@@ -121,7 +120,7 @@
   }
 
   .bingo-grid button.active {
-    background-color: rgb(18, 182, 68); /*color should be better*/
+    background-color: rgb(18, 182, 68); 
     color: #fff;
   }
 
@@ -136,8 +135,6 @@
   .restart-btn:hover {
     background-color: #e5c100;
   }
-
-  /* Confetti behind modal */
   .confetti {
     user-select: none;
     position: absolute;
@@ -163,12 +160,12 @@
   padding: 10px;
   border: 4px solid rgb(0, 0, 0);
   border-radius: 15px;
-  background-color: #1c1c1c; /* slightly lighter than default bg #121212 */
+  background-color: #1c1c1c;
   display: flex;
   justify-content: center;
-  background-color: #1c1c1c; /* initial shade of body background */
+  background-color: #1c1c1c; 
   align-items: center;
-  transition: background-color 0.3s ease; /* smooth theme change */
+  transition: background-color 0.3s ease;
 }
 #roomCodeDisplay {
     position: absolute;
@@ -185,15 +182,15 @@
     user-select: none;
     z-index: 1000;
 
-     /* fixed width for 3 digits */
-    text-align: center;   /* center the numbers */
+    
+    text-align: center; 
 
-    padding: 10px 0;      /* vertical padding */
+    padding: 10px 0;      
     border-radius: 12px;
     border: solid 3.8px black;
 
 
-    background-color: #1c1c1c; /* optional bg to match grid */
+    background-color: #1c1c1c; 
 }
 .turn-popup {
     position: fixed;
@@ -246,9 +243,6 @@
 <div class="grid-box">
   <div class="bingo-grid" id="grid"></div>
 </div>
-
-
-<!-- Modal Popup -->
 <div class="modal" id="modal">
   <h2>🎉 You Won! 🎉</h2>
   <button class="restart-btn" id="restartWinBtn">Restart Game</button>
@@ -265,10 +259,6 @@
 <script src="/socket.io/socket.io.js"></script>
 
 <script>
-/* =========================
-   Multiplayer script (fixed)
-   Replace the entire current script section with this block
-   ========================= */
 
 const winSound = document.getElementById("winSound");
 winSound.volume = 0.5;
@@ -281,9 +271,6 @@ let nextLetterIndex = 0;
 const completedLines = new Set();
 let gameWon = false;
 
-/* ------------------------------------
-   1️⃣ CREATE GRID BUTTONS FIRST
--------------------------------------*/
 
 const sound = document.getElementById("clickSound");
 sound.volume = 0.5;
@@ -291,28 +278,28 @@ sound.volume = 0.5;
 for (let i = 0; i < size * size; i++) {
   const btn = document.createElement("button");
   btn.textContent = "";
-  // no local activation here for multiplayer — handled in click handler below
+  
   grid.appendChild(btn);
   buttons.push(btn);
 
   btn.addEventListener("click", () => {
-    // always play sound
+    
     sound.currentTime = 0;
     sound.play().catch(e => {});
 
-    // determine number (may be set by flicker or later)
+    
     const num = parseInt(btn.textContent);
 
-    // If playing multiplayer (roomCode set) use server-controlled flow
+    
     if (roomCode) {
-      // if not our turn, ignore
+      
       if (!myTurn) return;
-      // if already active, ignore
+      
       if (btn.classList.contains("active")) return;
-      // send pick to server — server will broadcast back and update UI
+      
       pickNumber(num);
     } else {
-      // local single-player behavior — mark locally and check lines
+      
       if (!btn.classList.contains("active")) {
         btn.classList.add("active");
         checkLines();
@@ -321,37 +308,34 @@ for (let i = 0; i < size * size; i++) {
   });
 }
 
-/* ------------------------------------
-   2️⃣ LOAD SAVED THEME (MUST be here)
--------------------------------------*/
 function loadSavedTheme() {
   const saved = localStorage.getItem("bingoTheme");
   if (!saved) return;
 
   const t = JSON.parse(saved);
 
-  // Set page background
+  
   document.body.style.backgroundColor = t.bg;
 
-  // Set grid container shade (30% lighter)
+  
   const gridBox = document.querySelector(".grid-box");
   if (gridBox) {
     gridBox.style.backgroundColor = shadeColor(t.bg, 60);
   }
 
-  // Set room code background shade (same as grid)
+  
   const roomCodeDisplay = document.getElementById("roomCodeDisplay");
   if (roomCodeDisplay) {
     roomCodeDisplay.style.backgroundColor = shadeColor(t.bg, 45);
   }
 
-  // Keep all buttons permanently white
+  
   buttons.forEach(btn => {
     btn.style.backgroundColor = "#FFFFFF";
     btn.style.color = "#000000";
   });
 
-  // Active buttons still highlight
+  
   const style = document.createElement("style");
   style.innerHTML = `
     .bingo-grid button.active {
@@ -362,14 +346,11 @@ function loadSavedTheme() {
   document.head.appendChild(style);
 }
 
-loadSavedTheme(); // important
+loadSavedTheme(); 
 
-/* ------------------------------------
-   NUMBER GENERATION
--------------------------------------*/
 const numbers = Array.from({ length: 25 }, (_, i) => i + 1).sort(() => Math.random() - 0.5);
 
-// Diagonal flicker reveal
+
 function getDiagonals() {
   const diags = [];
   for (let k = 0; k < size * 2 - 1; k++) {
@@ -390,22 +371,20 @@ function flickerButton(index, finalNumber, delay) {
     const btn = buttons[index];
     let count = 0;
     const interval = setInterval(() => {
-      // show random intermediate numbers
+      
       btn.textContent = Math.floor(Math.random() * 25) + 1;
       count++;
       if (count > 10) {
         clearInterval(interval);
         btn.textContent = finalNumber;
-        // IMPORTANT: attach data-number attribute so sync can find the cell by value
+        
         btn.dataset.number = finalNumber;
       }
     }, 50);
   }, delay);
 }
 
-/* ------------------------------------
-   TITLE ROULETTE
--------------------------------------*/
+//title roulette
 function rouletteTitleChange() {
   const letters = document.querySelectorAll("#title span");
   const finalWord = ["B", "I", "N", "G", "O"];
@@ -428,19 +407,15 @@ function rouletteTitleChange() {
 
 setTimeout(rouletteTitleChange, 1700);
 
-/* ------------------------------------
-   NUMBER FLICKER START
--------------------------------------*/
+
 numbers.forEach((num, i) => {
   const btn = buttons[i];
   btn.textContent = num;
-  btn.dataset.number = num; // keep sync intact
+  btn.dataset.number = num; 
 });
 
 
-/* ------------------------------------
-   LINES CHECK
--------------------------------------*/
+
 function getAllLines() {
   const lines = [];
   for (let r = 0; r < size; r++) {
@@ -468,26 +443,26 @@ lines.forEach(line => {
     if (isActive) {
       completedLines.add(key);
       if (nextLetterIndex < titleSpans.length) {
-        titleSpans[nextLetterIndex].style.color = "#FFD700"; // yellow
+        titleSpans[nextLetterIndex].style.color = "#FFD700";
         nextLetterIndex++;
       }
     }
   }
 });
 
-// 👇 When all 5 letters are filled (currently yellow) → convert to green and enable button race
-if (nextLetterIndex === 5) { // all letters filled
+//convert yellow title to green 
+if (nextLetterIndex === 5) { 
   const bingoBtn = document.querySelector(".title");
-  titleSpans.forEach(span => span.style.color = "#4CAF50"); // turn green
+  titleSpans.forEach(span => span.style.color = "#4CAF50"); 
 
-  // Only emit to server, do not block grid clicks
+  
   bingoBtn.onclick = () => {
     if (roomCode) socket.emit("bingoPressed", roomCode);
   };
-  // one-time conversion + listener
+  
   if (!bingoBtn.classList.contains("bingo-race-setup")) {
     bingoBtn.classList.add("bingo-race-setup");
-    titleSpans.forEach(span => span.style.color = "#4CAF50"); // full green
+    titleSpans.forEach(span => span.style.color = "#4CAF50"); 
     bingoBtn.style.cursor = "pointer";
 
     bingoBtn.onclick = () => {
@@ -499,30 +474,21 @@ if (nextLetterIndex === 5) { // all letters filled
 }
 
 }
-
-/* ------------------------------------
-   MODAL
--------------------------------------*/
-
-
+//modal
 function showWinModal() {
   const modal = document.getElementById("modal");
   modal.classList.add("show");
 
-  // play win sound once
+
   if (winSound) {
     winSound.currentTime = 0;
     winSound.play().catch(e => {});
   }
 
-  // show confetti
   showConfetti();
 }
 
-
-/* ------------------------------------
-   CONFETTI
--------------------------------------*/
+//confetti
 function showConfetti() {
   const celebrationDiv = document.getElementById("celebration");
   for (let i = 0; i < 100; i++) {
@@ -538,10 +504,7 @@ function showConfetti() {
   }
 }
 
-/* ------------------------------------
-   THEME CHANGER
--------------------------------------*/
-/* (kept unchanged) */
+//reapply same theme and randomly change it also
 const themes = [
   { bg: "#00C7BE", btn: "#FFFFFF", active: "#008A83" },
   { bg: "#FF6B6B", btn: "#FFFFFF", active: "#C94F4F" },
@@ -597,15 +560,12 @@ function shadeColor(color, percent) {
     + (Math.round((t - B) * p / 100) + B)).toString(16).slice(1);
 }
 
-/* --------------------------
-   Socket.IO Multiplayer
----------------------------*/
-const socket = io();
+// sockets *skull emoji
+const socket = io("https://bingo-backend-ll4o.onrender.com");
 const display = document.getElementById("roomCodeDisplay");
 const params = new URLSearchParams(window.location.search);
 
 
-// IMPORTANT: extract room from URL right away
 let roomCode = params.get("room") || null;
 
 let myTurn = false;
@@ -632,36 +592,36 @@ function setupRestartButtons() {
 setupRestartButtons();
 
 
-// Call once at the start
+
 setupRestartButtons();
 
 
 socket.on("gameReset", ({ nextPlayerId }) => {
-    restartRequested = false; // unlock restart
+    restartRequested = false; 
 
-    // Hide all modals (win and lose) safely
+    
     document.querySelectorAll(".modal").forEach(modal => modal.classList.remove("show"));
 
-    // Reset grid button UI
+    
     gridButtons.forEach(btn => {
         btn.classList.remove("active");
         btn.disabled = false;            
         btn.style.backgroundColor = "";
     });
 
-    // Clear picked numbers & any win flags
+    
     pickedNumbers = [];
-    gameWon = false;   // reset win flag
+    gameWon = false;   
     nextLetterIndex = 0;
     completedLines.clear();
 
-    // Reset title spans (B I N G O colors)
+   
     titleSpans.forEach(span => span.style.color = "");
 
-    // Stop confetti if running
+   
     document.getElementById("celebration").innerHTML = "";
 
-    // Assign turn correctly → host gets passed from server
+    
     myTurn = (socket.id === nextPlayerId);
     console.log("🔄 Game reset. My turn:", myTurn);
 });
@@ -671,32 +631,27 @@ socket.on("roomJoined", (data) => { currentRoom = data.code; });
 
 
 
-// -------------------
-// JOIN ROOM
-// -------------------
+
 if (roomCode) {
   socket.emit("joinRoom", roomCode);
 }
 
-// -------------------
-// ROOM JOINED (server sends initial room data)
-// -------------------
-socket.on("roomJoined", ({ code, picked = [], players: roomPlayers = [], turnIndex = 0 }) => {
-  // show the room code in the top-left display
-  display.textContent = `${code}`;
 
-  // update local variables
+socket.on("roomJoined", ({ code, picked = [], players: roomPlayers = [], turnIndex = 0 }) => {
+  
+
+  
   players = roomPlayers;
   pickedNumbers = Array.isArray(picked) ? picked.slice() : [];
 
-  // mark any previously picked numbers on this board
+  
   pickedNumbers.forEach(num => updateBoard(num));
 
   if (players.length >= 2) {
         gridButtons.forEach(btn => btn.disabled = false);
     }
 
-  // set whose turn it is
+  
   myTurn = socket.id === roomPlayers[turnIndex];
 
   console.log("Joined room (client):", code, "players:", players, "picked:", pickedNumbers, "myTurn:", myTurn);
@@ -710,14 +665,11 @@ socket.on("bingoResult", ({ winnerId }) => {
   else showLoseModal();
 });
 
-// -------------------
-// PLAYER JOIN/LEAVE
-// -------------------
 socket.on("playerJoined", ({ players: roomPlayers }) => {
   players = roomPlayers;
   console.log("Player joined:", players);
   if (players.length >= 2) {
-        gridButtons.forEach(btn => btn.disabled = false); // enable grids
+        gridButtons.forEach(btn => btn.disabled = false); 
     }
 
 });
@@ -727,9 +679,7 @@ socket.on("playerLeft", (roomPlayers) => {
   console.log("Player left:", players);
 });
 
-// -------------------
-// ERROR HANDLING
-// -------------------
+
 socket.on("roomNotFound", () => {
   alert("❌ Room not found!");
   window.location.href = "main-menu.html";
@@ -740,17 +690,13 @@ socket.on("roomFull", () => {
   window.location.href = "main-menu.html";
 });
 
-// -------------------
-// PICK NUMBER
-// -------------------
+
 function pickNumber(num) {
-  if (!roomCode) return; // safety, do nothing if no room specified
+  if (!roomCode) return; 
   socket.emit("numberPicked", { code: roomCode, number: num });
 }
 
-// -------------------
-// RECEIVE SYNC FROM SERVER
-// -------------------
+
 socket.on("syncNumber", ({ number, nextPlayerId }) => {
   if (!pickedNumbers.includes(number)) {
     pickedNumbers.push(number);
@@ -759,36 +705,31 @@ socket.on("syncNumber", ({ number, nextPlayerId }) => {
   myTurn = socket.id === nextPlayerId;
 });
 
-// -------------------
-// BOARD HANDLERS
-// -------------------
+
 const gridButtons = Array.from(document.querySelectorAll("#grid button"));
 gridButtons.forEach(btn => btn.disabled = true);
 
-// Attach click listeners (already set above, but keep gridButtons for updateBoard)
+
 gridButtons.forEach(btn => {
-  // nothing extra here because buttons already have click listeners that call pickNumber()
 });
 
-// -------------------
-// Robust updateBoard: match by data-number OR textContent
-// -------------------
+
 function updateBoard(number) {
-  // try to find by data-number first (set by flickerButton), then fallback to textContent
+
   const btn = gridButtons.find(b => {
     const d = b.dataset && b.dataset.number;
     if (d && parseInt(d) === number) return true;
-    // fallback (in case data-number not yet set)
+
     return parseInt(b.textContent) === number;
   });
 
   if (btn && !btn.classList.contains("active")) {
     btn.classList.add("active");
-    checkLines(); // existing Bingo line check
+    checkLines();
   }
 }
 socket.on("win", () => {
-    // Winner UI
+  
     titleSpans.forEach(span => span.style.color = "#4CAF50");
 
     winSound.currentTime = 0;
@@ -809,14 +750,14 @@ function showLoseModal() {
 socket.on("gameReset", ({ nextPlayerId }) => {
     restartRequested = false;
 
-    // Set turn based on server
+    
     myTurn = (socket.id === nextPlayerId);
 
-    // Hide modals
+    
     document.getElementById("loseModal")?.classList.remove("show");
     document.getElementById("winModal")?.classList.remove("show");
 
-    // Reset grid buttons
+
     gridButtons.forEach(btn => {
         btn.disabled = false;
         btn.classList.remove("clicked");
@@ -836,13 +777,13 @@ tap.addEventListener('click', () => {
 });
 
 let currentRoom = null;
-// ===== Centered turn popup (JS-only, self-contained) =====
 
-// ===== Smaller turn popup, JS-only =====
+
+
 (function createTurnPopup() {
-  if (document.getElementById("turnPopup")) return; // prevent duplicates
+  if (document.getElementById("turnPopup")) return; 
 
-  // Create CSS for popup
+  
   const style = document.createElement("style");
   style.textContent = `
     .turn-popup {
@@ -875,14 +816,14 @@ let currentRoom = null;
   `;
   document.head.appendChild(style);
 
-  // Create the popup element
+ 
   const popup = document.createElement("div");
   popup.id = "turnPopup";
   popup.className = "turn-popup";
   popup.textContent = "Not your turn!";
   document.body.appendChild(popup);
 
-  // Method to show popup temporarily
+ 
   popup.show = function (ms = 1400) {
     popup.classList.add("show");
     if (popup._hideTimer) clearTimeout(popup._hideTimer);
@@ -890,7 +831,7 @@ let currentRoom = null;
   };
 })();
 
-// Helper function to trigger popup
+
 function showTurnPopupJS() {
   const p = document.getElementById("turnPopup");
   if (p && typeof p.show === "function") p.show();
@@ -900,12 +841,12 @@ function showTurnPopupJS() {
   }
 }
 
-// Intercept grid clicks to enforce turn
+
 document.addEventListener("click", function (ev) {
   const btn = ev.target.closest && ev.target.closest("#grid button");
   if (!btn) return;
 
-  // Multiplayer turn check
+
   if (typeof roomCode !== "undefined" && roomCode && !myTurn) {
     ev.preventDefault();
     ev.stopImmediatePropagation();
@@ -913,13 +854,13 @@ document.addEventListener("click", function (ev) {
     if (navigator.vibrate) try { navigator.vibrate(40); } catch(e) {}
     return;
   }
-}, true); // capturing phase
+}, true); 
 
-// ===== Waiting for other player popup =====
+
 (function createWaitingPopup() {
     if (document.getElementById("waitingPopup")) return;
 
-    // Add CSS for popup
+    
     const style = document.createElement("style");
     style.textContent = `
       .waiting-popup {
@@ -945,23 +886,23 @@ document.addEventListener("click", function (ev) {
     `;
     document.head.appendChild(style);
 
-    // Create popup element
+   
     const popup = document.createElement("div");
     popup.id = "waitingPopup";
     popup.className = "waiting-popup";
     popup.textContent = "⏳ Please wait for other players...";
     document.body.appendChild(popup);
 
-    // Methods to show/hide
+ 
     popup.show = () => popup.classList.add("show");
     popup.hide = () => popup.classList.remove("show");
 
-    popup.show(); // show initially
+    popup.show(); 
 })();
-// Disable all grid buttons initially
+
 gridButtons.forEach(btn => btn.disabled = true);
 
-// On joining room
+
 socket.on("roomJoined", ({ code, players: roomPlayers = [] }) => {
     display.textContent = code;
     players = roomPlayers;
@@ -973,7 +914,7 @@ socket.on("roomJoined", ({ code, players: roomPlayers = [] }) => {
     }
 });
 
-// On new player joining
+
 socket.on("playerJoined", ({ players: roomPlayers }) => {
     players = roomPlayers;
     if (players.length >= 2) {

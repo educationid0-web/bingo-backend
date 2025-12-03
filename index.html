@@ -1,617 +1,307 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bingo Game</title>
-<!-- Google Font -->
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bingo Menu</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=BBH+Sans+Hegarty&display=swap" rel="stylesheet">
-
+<meta name="description" content="Play fun and interactive Bingo online! Create boards, enjoy smooth gameplay, and share with friends. A fast and engaging bingo game built for everyone.">
 
 <style>
-   /* Modal Overlay */
-.modal-overlay {
-  position: fixed;
-  inset: 0;                       /* full screen */
-  background: rgba(0,0,0,0);    /* dim background */
-  display: flex;
-  justify-content: center;         /* horizontal center */
-  align-items: center;             /* vertical center */
-  z-index: 9999;                   /* above grid */
-  transform: scale(0);             /* for animation */
-  transition: transform 0.25s ease;
+body {
+    user-select: none;
+    margin: 0;
+    padding: 0;
+    background: #000;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
 }
 
-/* Show overlay */
-.modal-overlay.show {
-  transform: scale(1);
+#menuBlock {
+    width: 450px;
+    padding: 30px;
+    border: 3px solid white;
+    background: #000000;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    box-sizing: border-box;
+    border-radius: 50px;
 }
 
-/* Modal box */
-.modal {
-  width: 90%;
-  max-width: 400px;
-  max-height: 80%;                 /* never exceeds phone height */
-  background-color: #1f1f1f;
-  border-radius: 15px;
-  padding: 20px;
-  box-shadow: 0 0 20px #FFD700;
+#menuBlock h1 {
+    font-size: 50px;
+    font-weight: bold;
+    font-family: "BBH Sans Hegarty", sans-serif;
+    color: rgb(18, 182, 68);
+    padding-bottom: 60px;
+}
+
+.menu-btn {
+    width: 80%;
+    padding: 20px;
+    border-radius: 50px;
+    background: white;
+    color: black;
+    border: solid;
+    font-size: 20px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.menu-btn:hover {
+    transform: scale(1.05);
+    background-color: black;
+    color: white;
+}
+
+.menu-link {
+    padding-top: 50px;
+    color: gray;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 20px;
+}
+.menu-link:hover {
+   color: rgb(18, 182, 68);
+}
+
+#multiOptions {
+    display: none;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 10px;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+#multiOptions button {
+    width: 80%;
+    padding: 15px;
+    border-radius: 50px;
+    background: white;
+    color: black;
+    border: solid;
+    font-size: 18px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+#multiOptions button:hover {
+    transform: scale(1.05);
+    background-color: black;
+    color: white;
+}
+
+@media (max-width: 480px) {
+    #menuBlock {
+        width: 90%;
+        padding: 20px;
+        gap: 15px;
+    }
+    #menuBlock h1 {
+        font-size: 32px;
+    }
+    .menu-btn, #multiOptions button {
+        font-size: 16px;
+        padding: 12px;
+    }
+    .menu-link {
+        font-size: 14px;
+    }
+    * {
+      -webkit-tap-highlight-color: transparent;
+    }
+    button:focus,
+    button:active {
+      outline: none;
+      box-shadow: none;
+    }
+    button {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+    }
+}
+.menu-btn.inverted {
+    background-color: black;
+    color: white;
+    border-color: white;
+}
+.room-input {
+    width: 80%;
+    padding: 20px;
+    border-radius: 50px;
+    background: white;
+    color: black;
+    border: solid 2px;
+    font-size: 26px;
+    text-align: center;
+    outline: none;
+    transition: all 0.25s ease;
+    font-family: monospace; 
+    letter-spacing: 20px;  
+    box-sizing: border-box;
+    caret-color: rgb(18,182,68); 
+}
+
+.social-footer {
   text-align: center;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;                /* scroll inside modal if content too tall */
-  box-sizing: border-box;
-}
-
-/* Inner content wrapper */
-.modal-content {
+  font-size: 12px;
+  color: #888;
+  font-family: Arial, sans-serif;
+  position: fixed;
+  bottom: 10px;
+  left: 0;
   width: 100%;
-  flex: 1 1 auto;
-  overflow-y: auto;
 }
 
-/* Buttons */
-.modal button {
-  margin: 5px;
-  padding: 10px 20px;
-  font-size: 1rem;
-  font-weight: bold;
-  border-radius: 18px;
-  cursor: pointer;
-  border: none;
+
+.social-footer a {
+  color: #888;            /* same grey for links */
+  text-decoration: none;
   transition: 0.2s;
 }
 
-.restart-btn {
-  background-color: #FFD700;
-  color: black;
-}
-
-.restart-btn:hover {
-  background-color: #e5c100;
-}
-
-/* Mobile adjustments */
-@media (max-width: 480px) {
-  .modal {
-    width: 95%;
-    max-height: 90%;   /* fit inside phone viewport */
-    padding: 15px;
-  }
+.social-footer a:hover {
+  color: #555;            /* slightly darker on hover */
 }
 
 
-  body {
-    user-select: none;
-    overflow: hidden;
-    background-color: #121212;
-    color: white;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100dvh;
-    margin: 0;
-    font-family: Arial, sans-serif;
-    overflow-x: hidden;
-    overflow-y: auto;
-  }
 
-  .title {
-    user-select: none;
-    font-size: 3rem;
-    font-weight: bold;
-    margin-bottom: -10px;
-  } 
-  .title span {
-    color: white;
-    transition: color 0.3s ease;
-    font-family: "BBH Sans Hegarty", sans-serif;
-    margin: 0 5px;
-  }
-
-  .bingo-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(5, 1fr);
-    gap: 5px;
-    width: 90vw;
-    max-width: 500px;
-    height: 90vw;
-    max-height: 500px;
-  }
-
-  .bingo-grid button {
-    -webkit-tap-highlight-color: transparent; /* remove blue flash on tap */
-  -webkit-user-select: none;  /* prevent text selection on tap (iOS) */
-  -webkit-touch-callout: none; /* disable callout menu on long tap */
-    user-select: none;
-    width: 100%;
-    height: 100%;
-    font-size: clamp(18px, 4vw, 28px);;
-    border-radius: 8px;
-    cursor: pointer;
-    border: solid;
-    border-width : 3px;
-    transition: 0.2s;
-    background-color: #fff;
-    color: #000000;
-    border-color : black;
-  }
-
-  .bingo-grid button:hover {
-    background-color: #9a9a9a;
-  }
-
-  .bingo-grid button.active {
-    background-color: rgb(18, 182, 68); /*color should be better*/
-    color: #fff;
-  }
-
-  
-
-  .restart-btn {
-    user-select: none;
-    background-color: #FFD700;
-    color: black;
-  }
-
-  .restart-btn:hover {
-    background-color: #e5c100;
-  }
-
-  /* Confetti behind modal */
-  .confetti {
-    user-select: none;
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    opacity: 0.8;
-    animation: fall 3s linear forwards;
-  }
-
-  @keyframes fall {
-    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-  }
-  #title span {
-    font-weight: 900;
-    text-shadow:
-        -2px -2px 0 #000,
-         2px -2px 0 #000,
-        -2px  2px 0 #000,
-         2px  2px 0 #000;
-}
-.grid-box {
-  padding: 10px;
-  border: 4px solid rgb(0, 0, 0);
-  border-radius: 15px;
-  background-color: #1c1c1c; /* slightly lighter than default bg #121212 */
-  display: flex;
-  justify-content: center;
-  background-color: #1c1c1c; /* initial shade of body background */
-  align-items: center;
-  transition: background-color 0.3s ease; /* smooth theme change */
-}
-.divider {
-    width: 85%;
-    height: 2px;
-    background: white;
-    margin: 20px auto;
-    box-shadow: 0 0 6px white;
-}
-/* ----------------------------------------------------------HEAD-------------------------------------------------------------------*/
 </style>
 </head>
 <body>
-<audio id="clickSound" src="soft_tap.wav"></audio>
-<audio id="winSound" src="bingo_celebration_chime.wav"></audio>
-<h1 class="title" id="title">
-  <span>E</span><span>N</span><span>J</span><span>O</span><span>Y</span>
-</h1>
 
-<button id="themeBtn" style="
-  position:absolute; top:20px; right:20px;
-  padding:10px 18px; border:solid; border-radius:8px;
-  background:#FFD700; color:black; font-weight:bold;
-  cursor:pointer;  border-color : white; border-width : 2px;
-">Change Theme</button>
+<audio id="soundclick" src="hover.wav"></audio>
 
 
-<hr class="divider">
-<div class="grid-box">
-  <div class="bingo-grid" id="grid"></div>
-</div>
 
-
-<!-- Modal Popup -->
-<!-- WIN Modal -->
-<div class="modal-overlay" id="winModal">
-  <div class="modal">
-    <div class="modal-content">
-      <h2>🎉 You Won! 🎉</h2>
-      <button class="restart-btn" id="restartWinBtn">Restart Game</button>
+<div id="menuBlock">
+    <h1>BINGO</h1>
+    <button class="menu-btn" id="multiBtn">Play</button>
+    <div id="multiOptions">
+        <button id="createRoomBtn">Create Room</button>
+        <button id="joinRoomBtn">Join Room</button>
+        <button id="soloBtn">Solo</button>
     </div>
-  </div>
+
+    <div class="menu-link" onclick="howToPlay()">How To Play</div>
 </div>
-
-
-<div id="celebration"></div>
+<div><p style="color:white;"></p></div>
 <script src="/socket.io/socket.io.js"></script>
 <script>
-
-const winSound = document.getElementById("winSound");
-winSound.volume = 0.5;
-const size = 5;
-const grid = document.getElementById("grid");
-const buttons = [];
-const titleSpans = document.querySelectorAll(".title span");
-let nextLetterIndex = 0;
-const completedLines = new Set();
-let gameWon = false;
-
-
-/* ------------------------------------
-   1️⃣ CREATE GRID BUTTONS FIRST
--------------------------------------*/
-
-const sound = document.getElementById("clickSound");
-sound.volume = 0.5;
-for(let i=0;i<size*size;i++){
-  const btn = document.createElement("button");
-  btn.textContent = "";
-  grid.appendChild(btn);
-  buttons.push(btn);
-
-  
-  btn.addEventListener("click", () => {
-  if (!btn.classList.contains("active")) {
-    btn.classList.add("active"); // only activate, never remove
-    checkLines();
-  }
-    sound.currentTime = 0; 
-    sound.play().catch(e => {});
-    
-
+const pat = document.getElementById("soundclick");
+pat.volume = 0.04;
+document.addEventListener("click", () => {
+    pat.play().catch(() => {});
+}, { once: true });
+function playpat() {
+    pat.currentTime = 0;
+    pat.play().catch(() => {});
+}
+const multiBtn = document.getElementById("multiBtn");
+const multiOptions = document.getElementById("multiOptions");
+const createBtn = document.getElementById("createRoomBtn");
+const joinBtn = document.getElementById("joinRoomBtn");
+const soloBtn = document.getElementById("soloBtn");
+multiBtn.addEventListener("click", () => {
+    const isOpen = multiOptions.style.display === "flex";
+    if (isOpen) {
+        multiOptions.style.display = "none";
+        multiBtn.textContent = "Play";
+        multiBtn.classList.remove("inverted");
+    } else {
+        multiOptions.style.display = "flex";
+        multiBtn.textContent = "←";
+        multiBtn.classList.add("inverted");
+    }
 });
+soloBtn.addEventListener("click", () => {
+    setTimeout(() => {
+        window.location.href = "singleplayer.html";
+    }, 300);
+});
+//sockets
+const socket = io("https://bingo-backend-ll4o.onrender.com"); 
 
-}
+socket.on("connect", () => {
+  console.log("User connected to backend:", socket.id);
+});
+createBtn.addEventListener("click", () => {
+    socket.emit("requestRoom"); 
+});
+socket.on("roomCreated", (code) => {
+    window.location.href = `multiplayer.html?room=${code}`;
+});
+joinBtn.addEventListener("click", () => {
+    const input = document.createElement("input");
+    input.type = "tel";
+    input.inputMode = "numeric"; 
+    input.pattern = "[0-9]*";
+    input.maxLength = 3;
+    input.placeholder = "___";
+    input.classList.add("room-input");
 
-/* ------------------------------------
-   2️⃣ LOAD SAVED THEME (MUST be here)
--------------------------------------*/
-function loadSavedTheme() {
-  const saved = localStorage.getItem("bingoTheme");
-  if (!saved) return;
+    input.style.width = joinBtn.offsetWidth + "px";
+    input.style.height = joinBtn.offsetHeight + "px";
 
-  const t = JSON.parse(saved);
-
-  // Set page background
-  document.body.style.backgroundColor = t.bg;
-
-  // Set grid container shade (30% lighter)
-  const gridBox = document.querySelector(".grid-box");
-  if (gridBox) {
-    gridBox.style.backgroundColor = shadeColor(t.bg, 60);
-  }
-
-  // Keep all buttons permanently white
-  buttons.forEach(btn => {
-    btn.style.backgroundColor = "#FFFFFF";
-    btn.style.color = "#000000";
-  });
-
-  // Active buttons still highlight
-  const style = document.createElement("style");
-  style.innerHTML = `
-    .bingo-grid button.active {
-      background-color: ${t.active} !important;
-      color: white !important;
-    }
-  `;
-  document.head.appendChild(style);
-}
-
-
-loadSavedTheme();   // ⬅ important position!
-
-
-
-/* ------------------------------------
-   NUMBER GENERATION
--------------------------------------*/
-const numbers = Array.from({length:25},(_,i)=>i+1).sort(()=>Math.random()-0.5);
-
-
-// Diagonal flicker reveal
-function getDiagonals() {
-  const diags = [];
-  for (let k = 0; k < size * 2 - 1; k++) {
-    const diag = [];
-    for (let i = 0; i < size; i++) {
-      const j = k - i;
-      if (j >= 0 && j < size) diag.push(i*size + j);
-    }
-    if (diag.length > 0) diags.push(diag);
-  }
-  return diags;
-}
-
-
-
-function flickerButton(index, finalNumber, delay) {
-  setTimeout(()=>{
-    const btn = buttons[index];
-    let count = 0;
-    const interval = setInterval(()=>{
-      btn.textContent = Math.floor(Math.random()*25)+1;
-      count++;
-      if(count > 10){
-        clearInterval(interval);
-        btn.textContent = finalNumber;
-      }
-    },50);
-  }, delay);
-}
-
-
-/* ------------------------------------
-   TITLE ROULETTE
--------------------------------------*/
-function rouletteTitleChange() {
-  const letters = document.querySelectorAll("#title span");
-  const finalWord = ["B", "I", "N", "G", "O"];
-  const spins = 0;
-
-  letters.forEach((span, i) => {
-    let count = 0;
-    const interval = setInterval(() => {
-      span.textContent = String.fromCharCode(65 + Math.floor(Math.random() * 26));
-      count++;
-      if (count > spins) {
-        clearInterval(interval);
-        span.textContent = finalWord[i];
-        span.style.color = "#FFD700";
-        setTimeout(() => (span.style.color = "white"), 300);
-      }
-    }, 50 + i * 20);
-  });
-}
-
-setTimeout(rouletteTitleChange, 1700);
-
-
-
-/* ------------------------------------
-   NUMBER FLICKER START
--------------------------------------*/
-
-/* ------------------------------------
-   NUMBER REVEAL: EXPLOSION FROM CENTER
--------------------------------------*/
-
-function revealGridNumbers(numbers) {
-    const center = Math.floor(size / 2);
-    const layers = [];
-
-    // Convert buttons into 2D array
-    const gridButtons2D = [];
-    for (let r = 0; r < size; r++) {
-        gridButtons2D[r] = [];
-        for (let c = 0; c < size; c++) {
-            gridButtons2D[r][c] = buttons[r*size + c];
-        }
-    }
-
-    // Assign buttons to layers based on distance from center
-    for (let r = 0; r < size; r++) {
-        for (let c = 0; c < size; c++) {
-            const dist = Math.max(Math.abs(r-center), Math.abs(c-center));
-            if (!layers[dist]) layers[dist] = [];
-            layers[dist].push({ btn: gridButtons2D[r][c], num: numbers[r*size+c] });
-        }
-    }
-
-    // Animate layers
-    layers.forEach((layer, i) => {
-        setTimeout(() => {
-            layer.forEach(item => {
-                let count = 0;
-                const interval = setInterval(() => {
-                    item.btn.textContent = Math.floor(Math.random()*25)+1; // spinning random number
-                    count++;
-                    if(count > 10){ // spins 10 times
-                        clearInterval(interval);
-                        item.btn.textContent = item.num; // final number
-                    }
-                }, 5); // 30ms per spin
-            });
-        }, i * 500); // 100ms delay between layers
+    joinBtn.style.opacity = "0";
+    setTimeout(() => {
+        joinBtn.replaceWith(input);
+        input.focus();
+    }, 150);
+    input.addEventListener("input", () => {
+        input.value = input.value.replace(/\D/g, "");
     });
-}
-
-// Call it
-revealGridNumbers(numbers);
-
-
-
-/* ------------------------------------
-   LINES CHECK
--------------------------------------*/
-function getAllLines() {
-  const lines = [];
-  for(let r=0;r<size;r++){
-    const row = [];
-    for(let c=0;c<size;c++) row.push(r*size+c);
-    lines.push(row);
-  }
-  for(let c=0;c<size;c++){
-    const col = [];
-    for(let r=0;r<size;r++) col.push(r*size+c);
-    lines.push(col);
-  }
-  lines.push([0,6,12,18,24]);
-  lines.push([4,8,12,16,20]);
-  return lines;
-}
-
-function checkLines() {
-  const lines = getAllLines();
-  lines.forEach(line=>{
-    const key = line.join("-");
-    if(!completedLines.has(key)){
-      const isActive = line.every(i => buttons[i].classList.contains("active"));
-      if(isActive){
-        completedLines.add(key);
-        if(nextLetterIndex<titleSpans.length){
-          titleSpans[nextLetterIndex].style.color = "#FFD700";
-          nextLetterIndex++;
+    input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && input.value.length === 3) {
+            const code = input.value;
+            socket.emit("joinRoom", code); 
         }
-      }
-    }
-  });
+    });
+    setTimeout(() => {
+        document.addEventListener("click", function revert(e) {
+            if (e.target !== input) {
+                input.replaceWith(joinBtn);
+                joinBtn.style.opacity = "1";
+                document.removeEventListener("click", revert);
+            }
+        });
+    }, 200);
+});
+socket.on("roomJoined", ({ code }) => {
+    console.log("Joined room:", code);
+    window.location.href = `multiplayer.html?room=${code}`;
+});
+socket.on("roomNotFound", () => alert("❌ Room not found!"));
+socket.on("roomFull", () => alert("🚫 Room full!"));
 
-if (nextLetterIndex === 5 && !gameWon) {
-  gameWon = true;
-  titleSpans.forEach(span => span.style.color = "#4CAF50");
-
-  winSound.currentTime = 0;   // reset first
-  winSound.play().catch(e => {});  // then play
-
-  showWinModal();
-  showConfetti();
-}
-}
-
-
-/* ------------------------------------
-   MODAL
--------------------------------------*/
-function showWinModal() {
-  const modal = document.getElementById("winModal");
-  modal.classList.add("show");
-  document.getElementById("restartWinBtn").onclick = () => location.reload();
-}
-
-
-
-/* ------------------------------------
-   CONFETTI
--------------------------------------*/
-function showConfetti(){
-  const celebrationDiv = document.getElementById("celebration");
-  for(let i=0;i<100;i++){
-    const confetti = document.createElement("div");
-    confetti.classList.add("confetti");
-    confetti.style.backgroundColor = `hsl(${Math.random()*360}, 100%, 50%)`;
-    confetti.style.left = `${Math.random()*100}vw`;
-    confetti.style.top = `-${Math.random()*20}px`;
-    confetti.style.width = `${5 + Math.random()*5}px`;
-    confetti.style.height = `${5 + Math.random()*5}px`;
-    confetti.style.animationDuration = `${2 + Math.random()*2}s`;
-    celebrationDiv.appendChild(confetti);
-  }
-}
-
-
-/* ------------------------------------
-   3️⃣ THEME CHANGER WITH SAVING
--------------------------------------*/
-const themes = [
-{ bg: "#00C7BE", btn: "#FFFFFF", active: "#008A83" }, // Aqua Teal
-{ bg: "#FF6B6B", btn: "#FFFFFF", active: "#C94F4F" }, // Soft Neon Red
-{ bg: "#7D5FFF", btn: "#FFFFFF", active: "#523EBF" }, // Electric Purple
-{ bg: "#3AEDBF", btn: "#FFFFFF", active: "#27A389" }, // Mint Aqua
-{ bg: "#FF9F1A", btn: "#FFFFFF", active: "#C87814" }, // Warm Orange
-{ bg: "#00D4FF", btn: "#FFFFFF", active: "#0097B3" }, // Neon Cyan Blue
-{ bg: "#FF5E3A", btn: "#FFFFFF", active: "#C7462B" }, // Vibrant Orange Red
-{ bg: "#1DD1A1", btn: "#FFFFFF", active: "#138B6A" }, // Fresh Mint Green
-{ bg: "#FF3E7F", btn: "#FFFFFF", active: "#B52C5B" }, // Hot Pink Magenta
-{ bg: "#4CD964", btn: "#FFFFFF", active: "#2F8E3E" }, // Classic iOS Green
-{ bg: "#32ADE6", btn: "#FFFFFF", active: "#2079A1" }, // Fresh Sky Blue
-{ bg: "#FF375F", btn: "#FFFFFF", active: "#B12744" }, // Apple Pink Red
-{ bg: "#FFD60A", btn: "#FFFFFF", active: "#BFA307" }, // Bright Yellow Gold
-{ bg: "#00A8FF", btn: "#FFFFFF", active: "#006EAD" }, // Bold Blue
-{ bg: "#8B0000", btn: "#FFFFFF", active: "#4E0000" }, // deep red theme
-{ bg: "#1A2E05", btn: "#FFFFFF", active: "#0E1803" }, // Forest Black-Green
-{ bg: "#2E0F0F", btn: "#FFFFFF", active: "#1A0808" }, // Dark Maroon Black
-{ bg: "#1B263B", btn: "#FFFFFF", active: "#101624" }, // Dark Navy-Grey
-{ bg: "#2F0F3A", btn: "#FFFFFF", active: "#1D0824" }, // Plum-Black
-{ bg: "#101820", btn: "#FFFFFF", active: "#0A0F15" }, // Dark Petrol 
-];
-
-document.getElementById("themeBtn").onclick = () => {
-  const t = themes[Math.floor(Math.random() * themes.length)];
-
-  // Change page background
-  document.body.style.backgroundColor = t.bg;
-
-  // Make container a distinct shade (30% lighter)
-  const gridBox = document.querySelector(".grid-box");
-  if (gridBox) {
-    gridBox.style.backgroundColor = shadeColor(t.bg, 60);
-  }
-
-  // Keep all buttons permanently white
-  buttons.forEach(btn => {
-    btn.style.backgroundColor = "#FFFFFF";
-    btn.style.color = "#000000";
-  });
-
-  // Active buttons still highlight
-  const style = document.createElement("style");
-  style.innerHTML = `
-    .bingo-grid button.active {
-      background-color: ${t.active} !important;
-      color: white !important;
-    }
-  `;
-  document.head.appendChild(style);
-
-  // Save background theme
-  localStorage.setItem("bingoTheme", JSON.stringify(t));
-};
-
-function shadeColor(color, percent) {
-  let f=parseInt(color.slice(1),16),
-      t=percent<0?0:255,
-      p=percent<0?percent*-1:percent,
-      R=f>>16,G=f>>8&0x00FF,B=f&0x0000FF;
-  return "#" + (0x1000000 + (Math.round((t-R)*p/100)+R)*0x10000 
-                     + (Math.round((t-G)*p/100)+G)*0x100 
-                     + (Math.round((t-B)*p/100)+B)).toString(16).slice(1);
-}
-// --------------------------
-// Socket.IO Multiplayer
-// --------------------------
-
-
-const tap = document.getElementById('clickSound');
-
-button.addEventListener('click', () => {
-    tap.currentTime = 0;
-    tap.play();
+[multiBtn, multiOptions, createBtn, joinBtn, soloBtn].forEach(el => {
+    el.addEventListener("mouseenter", () => playpat());
 });
 
-
-
+function howToPlay() {
+    setTimeout(() => {
+        window.location.href = "How-to-play.html";
+    }, 300);
+}
 
 </script>
+<footer class="social-footer">
+   For more updates follow us on · <a href="https://www.instagram.com/ran.som70/" target="_blank">Instagram</a> ·
+
+
+</footer>
 
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
