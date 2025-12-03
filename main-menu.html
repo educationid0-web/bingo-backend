@@ -231,7 +231,7 @@ soloBtn.addEventListener("click", () => {
     }, 300);
 });
 //sockets
-const socket = io("https://bingo-backend-ll4o.onrender.com"); 
+const socket = io(); 
 
 socket.on("connect", () => {
   console.log("User connected to backend:", socket.id);
